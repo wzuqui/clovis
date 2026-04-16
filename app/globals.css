@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Markdown editor dark theme overrides */
+[data-color-mode='dark'] .w-md-editor {
+  background-color: #1f2937;
+  box-shadow: none;
+  border: 1px solid #374151;
+  border-radius: 0.5rem;
+}
+
+[data-color-mode='dark'] .w-md-editor-toolbar {
+  background-color: #374151;
+  border-bottom: 1px solid #4b5563;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+[data-color-mode='dark'] .w-md-editor-toolbar li > button {
+  color: #d1d5db;
+}
+
+[data-color-mode='dark'] .w-md-editor-toolbar li > button:hover {
+  color: #ffffff;
+  background-color: #4b5563;
+}
+
+[data-color-mode='dark'] .w-md-editor-text-textarea,
+[data-color-mode='dark'] .w-md-editor-text-pre > code,
+[data-color-mode='dark'] .w-md-editor-text {
+  color: #e5e7eb !important;
+  caret-color: #e5e7eb;
+}
+
+[data-color-mode='dark'] .w-md-editor-preview {
+  background-color: #1f2937;
+  box-shadow: inset 1px 0 0 #374151;
+}
+
+[data-color-mode='dark'] .wmde-markdown {
+  background-color: #1f2937;
+  color: #e5e7eb;
+}
+
+[data-color-mode='dark'] .wmde-markdown code {
+  background-color: #374151;
+  color: #e5e7eb;
+}
+
+[data-color-mode='dark'] .wmde-markdown pre {
+  background-color: #111827;
+}
+
+[data-color-mode='dark'] .wmde-markdown blockquote {
+  border-left-color: #6d28d9;
+  color: #9ca3af;
+}
