@@ -15,7 +15,7 @@ export interface Post {
   created_at: string;
   updated_at: string;
   profiles: Profile;
-  likes: { count: number }[];
+  likes: { type: string }[];
   comments: { count: number }[];
 }
 

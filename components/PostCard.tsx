@@ -9,18 +9,18 @@ import remarkGfm from 'remark-gfm';
 import { createClient } from '@/lib/supabase';
 import { uploadImage } from '@/lib/uploadImage';
 import type { Post } from '@/lib/types';
-import LikeButton from './LikeButton';
+import ReactionBar from './ReactionBar';
 import CommentSection from './CommentSection';
 import MarkdownEditor from './MarkdownEditor';
 
 interface PostCardProps {
   post: Post;
   currentUserId?: string;
-  isLiked: boolean;
+  userReactions: Set<string>;
   onUpdate: () => void;
 }
 
-export default function PostCard({ post, currentUserId, isLiked, onUpdate }: PostCardProps) {
+export default function PostCard({ post, currentUserId, userReactions, onUpdate }: PostCardProps) {
   const [editing, setEditing] = useState(false);
   const [editBody, setEditBody] = useState(post.content);
   const [saving, setSaving] = useState(false);
@@ -116,10 +116,10 @@ export default function PostCard({ post, currentUserId, isLiked, onUpdate }: Pos
       )}
 
       <div className="post-footer">
-        <LikeButton
+        <ReactionBar
           postId={post.id}
-          likeCount={post.likes?.[0]?.count ?? 0}
-          isLiked={isLiked}
+          allReactions={post.likes ?? []}
+          userReactions={userReactions}
           currentUserId={currentUserId}
           onUpdate={onUpdate}
         />
