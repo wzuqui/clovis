@@ -78,7 +78,7 @@ export default function SentimentChart() {
               return (
                 <span key={key} className="sentiment-legend-item">
                   <span className="sentiment-legend-dot" style={{ background: color }} />
-                  {label} <span style={{ color: 'var(--ink-dimmer)' }}>{count}</span>
+                  {label}
                 </span>
               );
             })}
