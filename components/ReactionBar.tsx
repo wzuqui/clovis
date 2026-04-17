@@ -60,9 +60,21 @@ export default function ReactionBar({ postId, commentId, allReactions, userReact
     if (cache.current.has(type)) { setNames(cache.current.get(type)!); return; }
     setLoadingNames(true);
     const supabase = createClient();
-    const { data } = await supabase.from(table).select('profiles(name)').eq(idCol, idVal).eq('type', type);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result = (data ?? []).map((r: any) => (Array.isArray(r.profiles) ? r.profiles[0]?.name : r.profiles?.name) || 'anon');
+    let result: string[];
+    if (commentId) {
+      const { data: rx } = await supabase.from('comment_likes').select('user_id').eq('comment_id', idVal).eq('type', type);
+      const ids = (rx ?? []).map(r => r.user_id);
+      if (ids.length > 0) {
+        const { data: profiles } = await supabase.from('profiles').select('name').in('id', ids);
+        result = (profiles ?? []).map(p => p.name || 'anon');
+      } else {
+        result = [];
+      }
+    } else {
+      const { data } = await supabase.from('likes').select('profiles(name)').eq('post_id', idVal).eq('type', type);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      result = (data ?? []).map((r: any) => (Array.isArray(r.profiles) ? r.profiles[0]?.name : r.profiles?.name) || 'anon');
+    }
     cache.current.set(type, result);
     setNames(result);
     setLoadingNames(false);
