@@ -129,6 +129,10 @@ export default function Home() {
         <span>clovis v2.0</span>
         <span className="foot-sep">·</span>
         <span>feito com 🧡 por quem também se surpreende</span>
+        <span className="foot-sep">·</span>
+        <a href="https://github.com/wzuqui/clovis" target="_blank" rel="noopener noreferrer" className="foot-link">github</a>
+        <span className="foot-sep">·</span>
+        <a href="https://github.com/wzuqui/clovis/issues" target="_blank" rel="noopener noreferrer" className="foot-link">reportar issue</a>
       </footer>
     </div>
   );

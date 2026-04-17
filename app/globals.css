@@ -541,6 +541,8 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
 /* ===== FOOTER ===== */
 .foot { text-align: center; margin-top: 60px; padding: 20px; color: var(--ink-dimmer); font-size: 11px; }
 .foot-sep { margin: 0 8px; }
+.foot-link { color: var(--ink-dim); text-decoration: none; }
+.foot-link:hover { color: var(--accent); }
 
 /* ===== GATE (not logged) ===== */
 .gate {
