@@ -26,9 +26,15 @@ export default function PostCard({ post, currentUserId, userReactions, onUpdate 
   const [editBody, setEditBody] = useState(post.content);
   const [saving, setSaving] = useState(false);
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const [lightboxClosing, setLightboxClosing] = useState(false);
+
+  const closeLightbox = () => {
+    setLightboxClosing(true);
+    setTimeout(() => { setLightboxSrc(null); setLightboxClosing(false); }, 150);
+  };
 
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightboxSrc(null); };
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') closeLightbox(); };
     if (lightboxSrc) window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [lightboxSrc]);
@@ -127,8 +133,8 @@ export default function PostCard({ post, currentUserId, userReactions, onUpdate 
       )}
 
       {lightboxSrc && createPortal(
-        <div className="lightbox-overlay" onClick={() => setLightboxSrc(null)}>
-          <button className="lightbox-close" onClick={e => { e.stopPropagation(); setLightboxSrc(null); }}><X size={12} /> fechar</button>
+        <div className={`lightbox-overlay${lightboxClosing ? ' closing' : ''}`} onClick={closeLightbox}>
+          <button className="lightbox-close" onClick={e => { e.stopPropagation(); closeLightbox(); }}><X size={12} /> fechar</button>
           <img className="lightbox-img" src={lightboxSrc} alt="" onClick={e => e.stopPropagation()} />
         </div>,
         document.body
