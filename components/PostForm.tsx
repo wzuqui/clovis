@@ -17,7 +17,7 @@ export default function PostForm({ onSuccess, userName }: { onSuccess: () => voi
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-      await supabase.from('posts').insert({ title: '', content: body.trim(), user_id: user.id });
+      await supabase.from('posts').insert({ content: body.trim(), user_id: user.id });
       setBody('');
       onSuccess();
     } finally {
