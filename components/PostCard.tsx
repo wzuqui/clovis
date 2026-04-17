@@ -10,6 +10,7 @@ import { createClient } from '@/lib/supabase';
 import { uploadImage } from '@/lib/uploadImage';
 import type { Post } from '@/lib/types';
 import ReactionBar from './ReactionBar';
+import { SENTIMENTS } from './SentimentChart';
 import CommentSection from './CommentSection';
 import MarkdownEditor from './MarkdownEditor';
 
@@ -69,7 +70,7 @@ export default function PostCard({ post, currentUserId, userReactions, onUpdate 
           )}
           <span>{timeAgo}</span>
           {wasEdited && <span className="post-edited">• editado</span>}
-          {post.sentiment && <span className={`sentiment-badge sentiment-${post.sentiment}`}>{post.sentiment === 'positive' ? 'positivo' : post.sentiment === 'negative' ? 'negativo' : 'neutro'}</span>}
+          {post.sentiment && <span className={`sentiment-badge sentiment-${post.sentiment}`}>{SENTIMENTS.find(s => s.key === post.sentiment)?.label ?? post.sentiment}</span>}
         </div>
         {isMine && !editing && (
           <div className="post-actions-top">

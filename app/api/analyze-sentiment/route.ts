@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { createClient } from '@supabase/supabase-js';
 
-const PROMPT = `Classifique o sentimento do texto abaixo como exatamente uma palavra: "positive", "neutral" ou "negative". Responda apenas com a palavra, sem pontuação.`;
+const VALID = ['positive', 'neutral', 'negative', 'excited', 'mixed', 'frustrated', 'angry'];
+const PROMPT = `Classifique o sentimento do texto abaixo com exatamente uma palavra em inglês entre as opções: "positive", "neutral", "negative", "excited", "mixed", "frustrated", "angry". Responda apenas com a palavra, sem pontuação.`;
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest) {
     });
 
     const raw = res.choices[0]?.message?.content?.trim().toLowerCase() ?? '';
-    const sentiment = ['positive', 'neutral', 'negative'].includes(raw) ? raw : 'neutral';
+    const sentiment = VALID.includes(raw) ? raw : 'neutral';
 
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,

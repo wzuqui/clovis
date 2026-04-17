@@ -7,6 +7,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { Comment } from '@/lib/types';
 import ReactionBar from './ReactionBar';
+import { SENTIMENTS } from './SentimentChart';
 
 export default function CommentSection({ postId, currentUserId, onUpdate, initialCount = 0 }: {
   postId: string;
@@ -90,7 +91,7 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
                 <span className="comment-time">
                   {formatDistanceToNow(new Date(c.created_at), { addSuffix: true, locale: ptBR })}
                 </span>
-                {c.sentiment && <span className={`sentiment-badge sentiment-${c.sentiment}`}>{c.sentiment === 'positive' ? 'positivo' : c.sentiment === 'negative' ? 'negativo' : 'neutro'}</span>}
+                {c.sentiment && <span className={`sentiment-badge sentiment-${c.sentiment}`}>{SENTIMENTS.find(s => s.key === c.sentiment)?.label ?? c.sentiment}</span>}
                 {c.user_id === currentUserId && (
                   <button className="comment-del" onClick={() => handleDelete(c.id)} title="apagar">
                     <Trash2 size={11} />

@@ -3,10 +3,14 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 
-const SENTIMENTS = [
-  { key: 'positive', label: 'positivo', color: '#4ade80' },
-  { key: 'neutral',  label: 'neutro',   color: '#a8a29e' },
-  { key: 'negative', label: 'negativo', color: '#f87171' },
+export const SENTIMENTS = [
+  { key: 'positive',   label: 'positivo',   color: '#4ade80' },
+  { key: 'excited',    label: 'empolgado',  color: '#f59e0b' },
+  { key: 'neutral',    label: 'neutro',     color: '#a8a29e' },
+  { key: 'mixed',      label: 'misto',      color: '#a78bfa' },
+  { key: 'frustrated', label: 'frustrado',  color: '#fb923c' },
+  { key: 'negative',   label: 'negativo',   color: '#f87171' },
+  { key: 'angry',      label: 'raiva',      color: '#dc2626' },
 ];
 
 export default function SentimentChart() {
@@ -74,7 +78,7 @@ export default function SentimentChart() {
 
           <div className="sentiment-legend">
             {SENTIMENTS.map(({ key, label, color }) => {
-              const count = counts.get(key) ?? 0;
+              if ((counts.get(key) ?? 0) === 0) return null;
               return (
                 <span key={key} className="sentiment-legend-item">
                   <span className="sentiment-legend-dot" style={{ background: color }} />

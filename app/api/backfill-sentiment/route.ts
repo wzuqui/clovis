@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { createClient } from '@supabase/supabase-js';
 
-const PROMPT = `Classifique o sentimento do texto abaixo como exatamente uma palavra: "positive", "neutral" ou "negative". Responda apenas com a palavra, sem pontuação.`;
+const VALID = ['positive', 'neutral', 'negative', 'excited', 'mixed', 'frustrated', 'angry'];
+const PROMPT = `Classifique o sentimento do texto abaixo com exatamente uma palavra em inglês entre as opções: "positive", "neutral", "negative", "excited", "mixed", "frustrated", "angry". Responda apenas com a palavra, sem pontuação.`;
 
 async function classify(openai: OpenAI, text: string): Promise<string> {
   try {
@@ -16,7 +17,7 @@ async function classify(openai: OpenAI, text: string): Promise<string> {
       temperature: 0,
     });
     const raw = res.choices[0]?.message?.content?.trim().toLowerCase() ?? '';
-    return ['positive', 'neutral', 'negative'].includes(raw) ? raw : 'neutral';
+    return VALID.includes(raw) ? raw : 'neutral';
   } catch {
     return 'neutral';
   }
@@ -31,8 +32,8 @@ export async function POST() {
     );
 
     const [{ data: posts }, { data: comments }] = await Promise.all([
-      supabase.from('posts').select('id, content').is('sentiment', null),
-      supabase.from('comments').select('id, content').is('sentiment', null),
+      supabase.from('posts').select('id, content'),
+      supabase.from('comments').select('id, content'),
     ]);
 
     let processed = 0;
