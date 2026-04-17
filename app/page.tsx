@@ -15,38 +15,31 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [timelineKey, setTimelineKey] = useState(0);
 
-  const fetchProfile = async (userId: string) => {
-    const supabase = createClient();
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .single();
-    setProfile(data as Profile | null);
-  };
-
   useEffect(() => {
     const supabase = createClient();
 
-    const init = async () => {
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        setUser(user);
-        if (user) await fetchProfile(user.id);
-      } catch {
-        // auth ou profile falhou — segue sem crash
-      } finally {
-        setLoading(false);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        try {
+          const u = session?.user ?? null;
+          setUser(u);
+          if (u) {
+            const { data } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', u.id)
+              .single();
+            setProfile(data as Profile | null);
+          } else {
+            setProfile(null);
+          }
+        } catch {
+          // segue sem travar
+        } finally {
+          setLoading(false);
+        }
       }
-    };
-    init();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_, session) => {
-      const u = session?.user ?? null;
-      setUser(u);
-      if (u) await fetchProfile(u.id);
-      else setProfile(null);
-    });
+    );
 
     return () => subscription.unsubscribe();
   }, []);
@@ -54,8 +47,6 @@ export default function Home() {
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
-    setUser(null);
-    setProfile(null);
   };
 
   if (loading) return (
@@ -64,7 +55,6 @@ export default function Home() {
     </div>
   );
 
-  // Logged in but not approved
   if (user && profile && !profile.is_approved) {
     return <ApprovalGate onLogout={handleLogout} />;
   }
