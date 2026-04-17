@@ -2,10 +2,10 @@
 
 import { createClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
-import { Terminal, LogOut } from 'lucide-react';
+import { Terminal, LogOut, ShieldCheck } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 
-export default function Header({ user }: { user: User | null }) {
+export default function Header({ user, isAdmin }: { user: User | null; isAdmin?: boolean }) {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -27,12 +27,22 @@ export default function Header({ user }: { user: User | null }) {
       </div>
 
       {user ? (
-        <div className="user-chip">
-          <span className="chip-dot" />
-          <span>@{displayName}</span>
-          <button className="logout-btn" onClick={handleLogout} title="sair">
-            <LogOut size={13} />
-          </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {isAdmin && (
+            <a
+              href="/admin"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, color: 'var(--accent)', textDecoration: 'none', padding: '4px 10px', border: '1px solid var(--border-lite)', borderRadius: 4 }}
+            >
+              <ShieldCheck size={12} /> admin
+            </a>
+          )}
+          <div className="user-chip">
+            <span className="chip-dot" />
+            <span>@{displayName}</span>
+            <button className="logout-btn" onClick={handleLogout} title="sair">
+              <LogOut size={13} />
+            </button>
+          </div>
         </div>
       ) : (
         <a href="/login" className="user-chip" style={{ textDecoration: 'none', cursor: 'pointer' }}>
