@@ -130,7 +130,7 @@ export default function PostCard({ post, currentUserId, isLiked, onUpdate }: Pos
           currentUserId={currentUserId}
           onUpdate={onUpdate}
         />
-        <CommentSection postId={post.id} currentUserId={currentUserId} onUpdate={onUpdate} />
+        <CommentSection postId={post.id} currentUserId={currentUserId} onUpdate={onUpdate} initialCount={post.comments?.[0]?.count ?? 0} />
       </div>
     </article>
   );

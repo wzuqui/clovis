@@ -7,10 +7,11 @@ import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { Comment } from '@/lib/types';
 
-export default function CommentSection({ postId, currentUserId, onUpdate }: {
+export default function CommentSection({ postId, currentUserId, onUpdate, initialCount = 0 }: {
   postId: string;
   currentUserId?: string;
   onUpdate: () => void;
+  initialCount?: number;
 }) {
   const [open, setOpen] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -46,7 +47,7 @@ export default function CommentSection({ postId, currentUserId, onUpdate }: {
     onUpdate();
   };
 
-  const count = comments.length;
+  const count = open ? comments.length : initialCount;
 
   return (
     <div className="comments">
