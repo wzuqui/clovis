@@ -53,6 +53,17 @@ export default function PostCard({ post, currentUserId, isLiked, onUpdate }: Pos
     <article className="post">
       <div className="post-header">
         <div className="post-meta">
+          {post.profiles?.avatar_url ? (
+            <img
+              src={post.profiles.avatar_url}
+              alt={name}
+              style={{ width: 22, height: 22, borderRadius: '50%', border: '1px solid var(--border-lite)', flexShrink: 0 }}
+            />
+          ) : (
+            <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--accent)', display: 'grid', placeItems: 'center', fontSize: 10, fontWeight: 700, color: '#1a0f08', flexShrink: 0 }}>
+              {name.charAt(0).toUpperCase()}
+            </div>
+          )}
           <span className="post-id">#{shortId}</span>
           <span className="post-author">@{name}</span>
           <span>{timeAgo}</span>
