@@ -65,6 +65,9 @@ export default function PostCard({ post, currentUserId, userReactions, onUpdate 
           )}
           <span className="post-id">#{shortId}</span>
           <span className="post-author">@{name}</span>
+          {post.profiles?.last_seen_at && Date.now() - new Date(post.profiles.last_seen_at).getTime() < 3 * 60 * 1000 && (
+            <span className="presence-dot" title="online agora" />
+          )}
           <span>{timeAgo}</span>
           {wasEdited && <span className="post-edited">• editado</span>}
         </div>
