@@ -366,6 +366,35 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
 .chart-row { display: flex; align-items: center; gap: 10px; }
 .chart-emoji { font-size: 16px; width: 24px; flex-shrink: 0; line-height: 1; }
 .chart-label { font-size: 11px; width: 52px; flex-shrink: 0; color: var(--ink-dim); }
+
+/* ===== SENTIMENT ===== */
+.sentiment-stack {
+  display: flex; height: 18px; border-radius: 999px; overflow: hidden; gap: 2px; margin-bottom: 10px;
+}
+.sentiment-segment {
+  position: relative; height: 100%; cursor: pointer;
+  transition: opacity 0.15s; min-width: 4px;
+  border-radius: 999px;
+}
+.sentiment-tooltip {
+  position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  background: var(--bg-3); border: 1px solid var(--border-lite);
+  border-radius: 6px; padding: 4px 10px; font-size: 11px;
+  white-space: nowrap; color: var(--ink); z-index: 10;
+  pointer-events: none;
+}
+.sentiment-legend {
+  display: flex; gap: 14px; flex-wrap: wrap;
+}
+.sentiment-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ink-dim); }
+.sentiment-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.sentiment-badge {
+  font-size: 10px; font-weight: 600; padding: 1px 7px;
+  border-radius: 999px; letter-spacing: 0.05em; text-transform: uppercase;
+}
+.sentiment-positive { background: rgba(74,222,128,0.15); color: #4ade80; }
+.sentiment-neutral  { background: rgba(168,162,158,0.15); color: #a8a29e; }
+.sentiment-negative { background: rgba(248,113,113,0.15); color: #f87171; }
 .chart-bar-bg {
   flex: 1; height: 8px; background: var(--border-lite);
   border-radius: 999px; overflow: hidden;

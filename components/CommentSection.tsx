@@ -23,7 +23,7 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
   const fetchComments = async () => {
     const supabase = createClient();
     const { data } = await supabase
-      .from('comments').select('*, profiles(*), comment_likes(type)')
+      .from('comments').select('*, profiles(*), comment_likes(type), sentiment')
       .eq('post_id', postId).order('created_at', { ascending: true });
     const fetched = data || [];
     setComments(fetched);
@@ -90,6 +90,7 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
                 <span className="comment-time">
                   {formatDistanceToNow(new Date(c.created_at), { addSuffix: true, locale: ptBR })}
                 </span>
+                {c.sentiment && <span className={`sentiment-badge sentiment-${c.sentiment}`}>{c.sentiment === 'positive' ? 'positivo' : c.sentiment === 'negative' ? 'negativo' : 'neutro'}</span>}
                 {c.user_id === currentUserId && (
                   <button className="comment-del" onClick={() => handleDelete(c.id)} title="apagar">
                     <Trash2 size={11} />

@@ -14,7 +14,7 @@ export default function Timeline({ currentUserId }: { currentUserId?: string }) 
     const supabase = createClient();
     const { data } = await supabase
       .from('posts')
-      .select('*, profiles(*), likes(type), comments(count)')
+      .select('*, profiles(*), likes(type), comments(count), sentiment')
       .order('created_at', { ascending: false });
     setPosts((data as Post[]) || []);
 

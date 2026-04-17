@@ -18,6 +18,7 @@ export interface Post {
   profiles: Profile;
   likes: { type: string }[];
   comments: { count: number }[];
+  sentiment?: string | null;
 }
 
 export interface Comment {
@@ -28,4 +29,5 @@ export interface Comment {
   created_at: string;
   profiles: Profile;
   comment_likes?: { type: string }[];
+  sentiment?: string | null;
 }

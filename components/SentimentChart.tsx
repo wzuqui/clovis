@@ -13,6 +13,7 @@ export default function SentimentChart() {
   const [counts, setCounts] = useState<Map<string, number>>(new Map());
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [hovered, setHovered] = useState<string | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -32,8 +33,6 @@ export default function SentimentChart() {
     load();
   }, []);
 
-  const max = Math.max(...Array.from(counts.values()), 1);
-
   return (
     <div className="chart-wrap">
       <div className="chart-header">
@@ -45,22 +44,46 @@ export default function SentimentChart() {
         <div style={{ color: 'var(--ink-dimmer)', fontSize: 12, padding: '8px 0' }}>
           <span className="blink">▸</span> carregando...
         </div>
+      ) : total === 0 ? (
+        <div style={{ color: 'var(--ink-dimmer)', fontSize: 12, padding: '8px 0' }}>nenhum dado ainda.</div>
       ) : (
-        <div className="chart-rows">
-          {SENTIMENTS.map(({ key, label, color }) => {
-            const count = counts.get(key) ?? 0;
-            const pct = (count / max) * 100;
-            return (
-              <div key={key} className="chart-row">
-                <span className="chart-label">{label}</span>
-                <div className="chart-bar-bg">
-                  <div className="chart-bar-fill" style={{ width: `${pct}%`, background: color }} />
+        <>
+          <div className="sentiment-stack">
+            {SENTIMENTS.map(({ key, label, color }) => {
+              const count = counts.get(key) ?? 0;
+              const pct = (count / total) * 100;
+              if (count === 0) return null;
+              return (
+                <div
+                  key={key}
+                  className="sentiment-segment"
+                  style={{ width: `${pct}%`, background: color, opacity: hovered && hovered !== key ? 0.4 : 1 }}
+                  onMouseEnter={() => setHovered(key)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={() => setHovered(h => h === key ? null : key)}
+                >
+                  {hovered === key && (
+                    <div className="sentiment-tooltip">
+                      {label} · {count} ({pct.toFixed(0)}%)
+                    </div>
+                  )}
                 </div>
-                <span className="chart-count">{count}</span>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+
+          <div className="sentiment-legend">
+            {SENTIMENTS.map(({ key, label, color }) => {
+              const count = counts.get(key) ?? 0;
+              return (
+                <span key={key} className="sentiment-legend-item">
+                  <span className="sentiment-legend-dot" style={{ background: color }} />
+                  {label} <span style={{ color: 'var(--ink-dimmer)' }}>{count}</span>
+                </span>
+              );
+            })}
+          </div>
+        </>
       )}
     </div>
   );
