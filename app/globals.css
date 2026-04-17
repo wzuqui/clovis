@@ -353,9 +353,8 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
 /* ===== CHART ===== */
 .charts-row {
   max-width: 760px; margin: 0 auto 32px; padding: 0 24px;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  display: flex; flex-direction: column; gap: 24px;
 }
-@media (max-width: 560px) { .charts-row { grid-template-columns: 1fr; } }
 .chart-wrap {
   position: relative; z-index: 1;
 }
