@@ -481,36 +481,25 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
 /* ===== LIGHTBOX ===== */
 .lightbox-overlay {
   position: fixed; inset: 0; z-index: 200;
-  background: rgba(0,0,0,0.92);
-  backdrop-filter: blur(8px);
+  background: rgba(0,0,0,0.88);
   display: flex; align-items: center; justify-content: center;
   cursor: zoom-out;
-  animation: fadeIn 0.15s ease both;
 }
-@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
 .lightbox-close {
-  position: fixed; top: 20px; right: 20px;
-  width: 40px; height: 40px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-  color: rgba(255,255,255,0.8);
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: background 0.15s, color 0.15s;
+  position: fixed; top: 16px; right: 16px;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.8); border-radius: 6px; padding: 5px 10px;
+  cursor: pointer; display: flex; align-items: center; gap: 5px;
+  font-size: 11px; font-family: inherit; letter-spacing: 0.05em;
   z-index: 201;
 }
-.lightbox-close:hover { background: rgba(255,255,255,0.18); color: #fff; }
+.lightbox-close:hover { background: rgba(255,255,255,0.16); color: #fff; }
 .lightbox-img {
-  max-width: calc(100vw - 80px);
-  max-height: calc(100vh - 80px);
-  object-fit: contain;
-  cursor: default;
+  max-width: calc(100vw - 40px);
+  max-height: calc(100vh - 40px);
+  object-fit: contain; cursor: default;
   border-radius: 4px;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
-  animation: imgIn 0.2s cubic-bezier(.2,.8,.2,1) both;
 }
-@keyframes imgIn { from { opacity: 0; transform: scale(0.96) } to { opacity: 1; transform: scale(1) } }
 
 /* ===== FOOTER ===== */
 .foot { text-align: center; margin-top: 60px; padding: 20px; color: var(--ink-dimmer); font-size: 11px; }
