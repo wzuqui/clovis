@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { Comment } from '@/lib/types';
+import ReactionBar from './ReactionBar';
 
 export default function CommentSection({ postId, currentUserId, onUpdate, initialCount = 0 }: {
   postId: string;
@@ -15,15 +16,31 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
 }) {
   const [open, setOpen] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [userRxMap, setUserRxMap] = useState<Map<string, Set<string>>>(new Map());
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
 
   const fetchComments = async () => {
     const supabase = createClient();
     const { data } = await supabase
-      .from('comments').select('*, profiles(*)')
+      .from('comments').select('*, profiles(*), comment_likes(type)')
       .eq('post_id', postId).order('created_at', { ascending: true });
-    setComments(data || []);
+    const fetched = data || [];
+    setComments(fetched);
+
+    if (currentUserId && fetched.length > 0) {
+      const { data: myRx } = await supabase
+        .from('comment_likes')
+        .select('comment_id, type')
+        .in('comment_id', fetched.map(c => c.id))
+        .eq('user_id', currentUserId);
+      const m = new Map<string, Set<string>>();
+      for (const r of myRx ?? []) {
+        if (!m.has(r.comment_id)) m.set(r.comment_id, new Set());
+        m.get(r.comment_id)!.add(r.type);
+      }
+      setUserRxMap(m);
+    }
   };
 
   useEffect(() => { if (open) fetchComments(); }, [open, postId]);
@@ -77,6 +94,13 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
                 )}
               </div>
               <p className="comment-text">{c.content}</p>
+              <ReactionBar
+                commentId={c.id}
+                allReactions={c.comment_likes ?? []}
+                userReactions={userRxMap.get(c.id) ?? new Set()}
+                currentUserId={currentUserId}
+                onUpdate={fetchComments}
+              />
             </div>
           ))}
 

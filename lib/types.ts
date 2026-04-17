@@ -27,4 +27,5 @@ export interface Comment {
   content: string;
   created_at: string;
   profiles: Profile;
+  comment_likes?: { type: string }[];
 }

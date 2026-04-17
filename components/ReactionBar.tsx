@@ -12,14 +12,18 @@ const REACTIONS = [
 ];
 
 interface ReactionBarProps {
-  postId: string;
+  postId?: string;
+  commentId?: string;
   allReactions: { type: string }[];
   userReactions: Set<string>;
   currentUserId?: string;
   onUpdate: () => void;
 }
 
-export default function ReactionBar({ postId, allReactions, userReactions, currentUserId, onUpdate }: ReactionBarProps) {
+export default function ReactionBar({ postId, commentId, allReactions, userReactions, currentUserId, onUpdate }: ReactionBarProps) {
+  const table = commentId ? 'comment_likes' : 'likes';
+  const idCol = commentId ? 'comment_id'    : 'post_id';
+  const idVal = (commentId ?? postId)!;
   const [activeTypes, setActiveTypes] = useState<Set<string>>(new Set(userReactions));
   const [counts, setCounts] = useState<Map<string, number>>(() => {
     const m = new Map<string, number>(REACTIONS.map(r => [r.type, 0]));
@@ -43,9 +47,9 @@ export default function ReactionBar({ postId, allReactions, userReactions, curre
     setLoading(type);
     const supabase = createClient();
     if (isActive) {
-      await supabase.from('likes').delete().eq('post_id', postId).eq('user_id', currentUserId).eq('type', type);
+      await supabase.from(table).delete().eq(idCol, idVal).eq('user_id', currentUserId).eq('type', type);
     } else {
-      await supabase.from('likes').insert({ post_id: postId, user_id: currentUserId, type });
+      await supabase.from(table).insert({ [idCol]: idVal, user_id: currentUserId, type });
     }
     setLoading(null);
   };
@@ -56,7 +60,7 @@ export default function ReactionBar({ postId, allReactions, userReactions, curre
     if (cache.current.has(type)) { setNames(cache.current.get(type)!); return; }
     setLoadingNames(true);
     const supabase = createClient();
-    const { data } = await supabase.from('likes').select('profiles(name)').eq('post_id', postId).eq('type', type);
+    const { data } = await supabase.from(table).select('profiles(name)').eq(idCol, idVal).eq('type', type);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = (data ?? []).map((r: any) => (Array.isArray(r.profiles) ? r.profiles[0]?.name : r.profiles?.name) || 'anon');
     cache.current.set(type, result);
