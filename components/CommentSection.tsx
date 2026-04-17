@@ -50,7 +50,10 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
     if (!text.trim() || !currentUserId) return;
     setLoading(true);
     const supabase = createClient();
-    await supabase.from('comments').insert({ post_id: postId, user_id: currentUserId, content: text.trim() });
+    const { data: inserted } = await supabase.from('comments').insert({ post_id: postId, user_id: currentUserId, content: text.trim() }).select('id').single();
+    if (inserted?.id) {
+      fetch('/api/analyze-sentiment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: text.trim(), id: inserted.id, table: 'comments' }) }).catch(() => {});
+    }
     setText('');
     await fetchComments();
     onUpdate();

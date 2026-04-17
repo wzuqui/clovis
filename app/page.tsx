@@ -9,6 +9,7 @@ import PostForm from '@/components/PostForm';
 import Timeline from '@/components/Timeline';
 import ApprovalGate from '@/components/ApprovalGate';
 import ReactionsChart from '@/components/ReactionsChart';
+import SentimentChart from '@/components/SentimentChart';
 import EditProfileModal from '@/components/EditProfileModal';
 import Lightbox from '@/components/Lightbox';
 
@@ -104,7 +105,10 @@ export default function Home() {
         </p>
       </div>
 
-      <ReactionsChart />
+      <div className="charts-row">
+        <ReactionsChart />
+        <SentimentChart />
+      </div>
 
       <main className="main">
         {user && profile?.is_approved ? (
