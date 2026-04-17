@@ -8,6 +8,7 @@ import Header from '@/components/Header';
 import PostForm from '@/components/PostForm';
 import Timeline from '@/components/Timeline';
 import ApprovalGate from '@/components/ApprovalGate';
+import ReactionsChart from '@/components/ReactionsChart';
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
@@ -87,6 +88,8 @@ export default function Home() {
           registre aqui — um log coletivo de pequenas maravilhas e pequenos desastres com o Claude Code.
         </p>
       </div>
+
+      <ReactionsChart />
 
       <main className="main">
         {user && profile?.is_approved ? (
