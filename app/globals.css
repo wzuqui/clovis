@@ -484,11 +484,7 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
   background: rgba(0,0,0,0.88);
   display: flex; align-items: center; justify-content: center;
   cursor: zoom-out;
-  animation: lbIn 0.15s ease both;
 }
-.lightbox-overlay.closing { animation: lbOut 0.15s ease forwards; }
-@keyframes lbIn  { from { opacity: 0 } to { opacity: 1 } }
-@keyframes lbOut { from { opacity: 1 } to { opacity: 0 } }
 .lightbox-close {
   position: fixed; top: 16px; right: 16px;
   background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
