@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Edit3, Trash2, X } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -24,6 +24,13 @@ export default function PostCard({ post, currentUserId, userReactions, onUpdate 
   const [editing, setEditing] = useState(false);
   const [editBody, setEditBody] = useState(post.content);
   const [saving, setSaving] = useState(false);
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightboxSrc(null); };
+    if (lightboxSrc) window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [lightboxSrc]);
 
   const isMine = currentUserId === post.user_id;
   const name = post.profiles?.name || 'anon';
@@ -98,7 +105,7 @@ export default function PostCard({ post, currentUserId, userReactions, onUpdate 
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
-                img({ src, alt }) { return <img className="md-img" src={src} alt={alt || ''} />; },
+                img({ src, alt }) { return <img className="md-img" src={src} alt={alt || ''} style={{ cursor: 'zoom-in' }} onClick={() => setLightboxSrc(src || null)} />; },
                 a({ href, children }) { return <a className="md-link" href={href} target="_blank" rel="noopener noreferrer">{children}</a>; },
                 pre({ children }) { return <pre className="md-pre">{children}</pre>; },
                 code({ children, className }) {
@@ -116,6 +123,12 @@ export default function PostCard({ post, currentUserId, userReactions, onUpdate 
             </ReactMarkdown>
           </div>
         </>
+      )}
+
+      {lightboxSrc && (
+        <div className="lightbox-overlay" onClick={() => setLightboxSrc(null)}>
+          <img className="lightbox-img" src={lightboxSrc} alt="" onClick={e => e.stopPropagation()} />
+        </div>
       )}
 
       <div className="post-footer">
