@@ -462,6 +462,22 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
 }
 .btn-ghost:hover { color: var(--ink); border-color: var(--ink-dim); }
 
+/* ===== MODAL ===== */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.modal-card {
+  background: var(--bg-2); border: 1px solid var(--border-lite);
+  border-radius: 10px; padding: 24px;
+  width: 100%; max-width: 420px;
+  animation: cardIn 0.25s cubic-bezier(.2,.8,.2,1) both;
+}
+.modal-header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+}
+
 /* ===== FOOTER ===== */
 .foot { text-align: center; margin-top: 60px; padding: 20px; color: var(--ink-dimmer); font-size: 11px; }
 .foot-sep { margin: 0 8px; }

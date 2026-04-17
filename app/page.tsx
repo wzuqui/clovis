@@ -9,12 +9,14 @@ import PostForm from '@/components/PostForm';
 import Timeline from '@/components/Timeline';
 import ApprovalGate from '@/components/ApprovalGate';
 import ReactionsChart from '@/components/ReactionsChart';
+import EditProfileModal from '@/components/EditProfileModal';
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [timelineKey, setTimelineKey] = useState(0);
+  const [showEditProfile, setShowEditProfile] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -83,7 +85,15 @@ export default function Home() {
   return (
     <div className="app">
       <div className="grid-bg" />
-      <Header user={user} isAdmin={isAdmin} />
+      <Header user={user} profile={profile} isAdmin={isAdmin} onEditProfile={() => setShowEditProfile(true)} />
+      {showEditProfile && user && profile && (
+        <EditProfileModal
+          profile={profile}
+          userId={user.id}
+          onClose={() => setShowEditProfile(false)}
+          onSave={updated => setProfile(p => p ? { ...p, ...updated } : p)}
+        />
+      )}
 
       <div className="hero">
         <h1 className="hero-title">O que o Clóvis Code fez pra te surpreender hoje?</h1>

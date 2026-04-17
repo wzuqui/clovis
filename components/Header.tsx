@@ -2,10 +2,18 @@
 
 import { createClient } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
-import { Terminal, LogOut, ShieldCheck } from 'lucide-react';
+import { Terminal, LogOut, ShieldCheck, Settings } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
+import type { Profile } from '@/lib/types';
 
-export default function Header({ user, isAdmin }: { user: User | null; isAdmin?: boolean }) {
+interface HeaderProps {
+  user: User | null;
+  profile?: Profile | null;
+  isAdmin?: boolean;
+  onEditProfile?: () => void;
+}
+
+export default function Header({ user, profile, isAdmin, onEditProfile }: HeaderProps) {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -14,7 +22,7 @@ export default function Header({ user, isAdmin }: { user: User | null; isAdmin?:
     router.refresh();
   };
 
-  const displayName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'anon';
+  const displayName = profile?.name || user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'anon';
 
   return (
     <header className="topbar">
@@ -37,8 +45,17 @@ export default function Header({ user, isAdmin }: { user: User | null; isAdmin?:
             </a>
           )}
           <div className="user-chip">
-            <span className="chip-dot" />
+            {profile?.avatar_url ? (
+              <img src={profile.avatar_url} alt="" style={{ width: 20, height: 20, borderRadius: '50%', border: '1px solid var(--border-lite)', flexShrink: 0 }} />
+            ) : (
+              <span className="chip-dot" />
+            )}
             <span>@{displayName}</span>
+            {onEditProfile && (
+              <button className="logout-btn" onClick={onEditProfile} title="editar perfil">
+                <Settings size={13} />
+              </button>
+            )}
             <button className="logout-btn" onClick={handleLogout} title="sair">
               <LogOut size={13} />
             </button>
