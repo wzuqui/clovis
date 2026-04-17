@@ -61,7 +61,9 @@ export default function EditProfileModal({ profile, userId, onClose, onSave }: P
       if (imageSrc && croppedAreaPixels) {
         const blob = await getCroppedImg(imageSrc, croppedAreaPixels);
         const path = `${userId}.jpg`;
-        await supabase.storage.from('avatars').upload(path, blob, { upsert: true, contentType: 'image/jpeg' });
+        await supabase.storage.from('avatars').remove([path]);
+        const { error: uploadError } = await supabase.storage.from('avatars').upload(path, blob, { contentType: 'image/jpeg' });
+        if (uploadError) throw new Error(uploadError.message);
         const { data } = supabase.storage.from('avatars').getPublicUrl(path);
         avatar_url = `${data.publicUrl}?t=${Date.now()}`;
       }
@@ -69,6 +71,9 @@ export default function EditProfileModal({ profile, userId, onClose, onSave }: P
       await supabase.from('profiles').update({ name: name.trim(), avatar_url }).eq('id', userId);
       onSave({ name: name.trim(), avatar_url });
       onClose();
+    } catch (err) {
+      console.error('save profile error:', err);
+      alert('Erro ao salvar: ' + (err instanceof Error ? err.message : 'tente novamente'));
     } finally {
       setSaving(false);
     }
