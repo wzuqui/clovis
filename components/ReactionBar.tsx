@@ -48,7 +48,6 @@ export default function ReactionBar({ postId, allReactions, userReactions, curre
       await supabase.from('likes').insert({ post_id: postId, user_id: currentUserId, type });
     }
     setLoading(null);
-    onUpdate();
   };
 
   const showWho = async (type: string) => {
