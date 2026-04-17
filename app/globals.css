@@ -474,7 +474,7 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
   color: var(--ink-dimmer); cursor: pointer; padding: 2px 4px; border-radius: 3px;
 }
 .comment-del:hover { color: var(--danger); }
-.comment-text { margin: 0; font-size: 13px; color: var(--ink); white-space: pre-wrap; }
+.comment-text { margin: 0; font-size: 13px; color: var(--ink); overflow-wrap: break-word; word-break: break-word; min-width: 0; }
 .comment-input-row { display: flex; gap: 6px; margin-top: 12px; }
 .comment-input {
   flex: 1; background: var(--bg-3); border: 1px solid var(--border-lite);

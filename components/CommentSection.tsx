@@ -5,6 +5,8 @@ import { MessageCircle, Send, Trash2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import type { Comment } from '@/lib/types';
 import ReactionBar from './ReactionBar';
 import { SENTIMENTS } from './SentimentChart';
@@ -98,7 +100,18 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
                   </button>
                 )}
               </div>
-              <p className="comment-text">{c.content}</p>
+              <div className="comment-text">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    img({ src, alt }) { return <img className="md-img" src={src} alt={alt || ''} style={{ cursor: 'zoom-in' }} onClick={() => window.dispatchEvent(new CustomEvent('lightbox:open', { detail: src }))} />; },
+                    a({ href, children }) { return <a className="md-link" href={href} target="_blank" rel="noopener noreferrer">{children}</a>; },
+                    p({ children }) { return <p className="md-p" style={{ margin: '4px 0' }}>{children}</p>; },
+                    code({ children, className }) { return className ? <code className={className}>{children}</code> : <code className="md-code">{children}</code>; },
+                    pre({ children }) { return <pre className="md-pre">{children}</pre>; },
+                  }}
+                >{c.content}</ReactMarkdown>
+              </div>
               <ReactionBar
                 commentId={c.id}
                 allReactions={c.comment_likes ?? []}
