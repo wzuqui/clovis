@@ -203,7 +203,6 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
   line-height: 1.1; letter-spacing: -0.02em;
   margin: 0 0 14px; color: var(--ink);
 }
-.hero-title::first-letter { color: var(--accent); }
 .hero-sub { color: var(--ink-dim); font-size: 13px; margin: 0; }
 
 .main { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 0 24px; }

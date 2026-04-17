@@ -99,7 +99,7 @@ export default function Home() {
       )}
 
       <div className="hero">
-        <h1 className="hero-title">O que o Clóvis Code fez pra te surpreender hoje?</h1>
+        <h1 className="hero-title">O que o <span style={{ color: 'var(--accent)' }}>Clóvis Code</span> fez pra te surpreender hoje?</h1>
         <p className="hero-sub">
           registre aqui — um log coletivo de pequenas maravilhas e pequenos desastres com o Claude Code.
         </p>
