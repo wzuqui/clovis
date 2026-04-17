@@ -57,6 +57,15 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!user) return;
+    const supabase = createClient();
+    const ping = () => supabase.from('profiles').update({ last_seen_at: new Date().toISOString() }).eq('id', user.id);
+    ping();
+    const interval = setInterval(ping, 60_000);
+    return () => clearInterval(interval);
+  }, [user?.id]);
+
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();

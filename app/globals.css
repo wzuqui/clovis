@@ -427,6 +427,10 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
 .comment:last-of-type { border-bottom: none; }
 .comment-head { display: flex; align-items: center; gap: 10px; font-size: 11px; margin-bottom: 4px; }
 .comment-author { color: var(--accent-2); font-weight: 600; }
+.presence-dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+  background: #4ade80; box-shadow: 0 0 6px #4ade80; display: inline-block;
+}
 .comment-time { color: var(--ink-dimmer); }
 .comment-del {
   margin-left: auto; background: transparent; border: none;

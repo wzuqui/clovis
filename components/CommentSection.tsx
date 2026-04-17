@@ -64,6 +64,9 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
             <div key={c.id} className="comment">
               <div className="comment-head">
                 <span className="comment-author">@{c.profiles?.name || 'anon'}</span>
+                {c.profiles?.last_seen_at && Date.now() - new Date(c.profiles.last_seen_at).getTime() < 3 * 60 * 1000 && (
+                  <span className="presence-dot" title="online agora" />
+                )}
                 <span className="comment-time">
                   {formatDistanceToNow(new Date(c.created_at), { addSuffix: true, locale: ptBR })}
                 </span>
