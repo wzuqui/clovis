@@ -485,6 +485,14 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
   display: flex; align-items: center; justify-content: center;
   cursor: zoom-out; padding: 20px;
 }
+.lightbox-close {
+  position: absolute; top: 16px; right: 16px;
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+  color: #fff; border-radius: 6px; padding: 6px 10px;
+  cursor: pointer; display: flex; align-items: center; gap: 6px;
+  font-size: 11px; font-family: inherit;
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.2); }
 .lightbox-img {
   max-width: 90vw; max-height: 90vh;
   border-radius: 6px; object-fit: contain;

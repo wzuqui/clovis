@@ -127,6 +127,7 @@ export default function PostCard({ post, currentUserId, userReactions, onUpdate 
 
       {lightboxSrc && (
         <div className="lightbox-overlay" onClick={() => setLightboxSrc(null)}>
+          <button className="lightbox-close" onClick={() => setLightboxSrc(null)} title="fechar"><X size={16} /></button>
           <img className="lightbox-img" src={lightboxSrc} alt="" onClick={e => e.stopPropagation()} />
         </div>
       )}
