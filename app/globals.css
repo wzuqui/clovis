@@ -393,12 +393,12 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
   border-radius: 999px; letter-spacing: 0.05em; text-transform: uppercase;
 }
 .sentiment-positive   { background: rgba(74,222,128,0.15);  color: #4ade80; }
-.sentiment-excited    { background: rgba(245,158,11,0.15);  color: #f59e0b; }
-.sentiment-neutral    { background: rgba(168,162,158,0.15); color: #a8a29e; }
-.sentiment-mixed      { background: rgba(167,139,250,0.15); color: #a78bfa; }
-.sentiment-frustrated { background: rgba(251,146,60,0.15);  color: #fb923c; }
+.sentiment-excited    { background: rgba(163,230,53,0.15);  color: #a3e635; }
+.sentiment-neutral    { background: rgba(250,204,21,0.15);  color: #facc15; }
+.sentiment-mixed      { background: rgba(249,115,22,0.15);  color: #fb923c; }
+.sentiment-frustrated { background: rgba(249,115,22,0.15);  color: #f97316; }
 .sentiment-negative   { background: rgba(248,113,113,0.15); color: #f87171; }
-.sentiment-angry      { background: rgba(220,38,38,0.15);   color: #dc2626; }
+.sentiment-angry      { background: rgba(239,68,68,0.15);   color: #ef4444; }
 .chart-bar-bg {
   flex: 1; height: 8px; background: var(--border-lite);
   border-radius: 999px; overflow: hidden;

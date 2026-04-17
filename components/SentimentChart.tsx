@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase';
 
 export const SENTIMENTS = [
-  { key: 'positive',   label: 'positivo',   color: '#4ade80' },
-  { key: 'excited',    label: 'empolgado',  color: '#f59e0b' },
-  { key: 'neutral',    label: 'neutro',     color: '#a8a29e' },
-  { key: 'mixed',      label: 'misto',      color: '#a78bfa' },
-  { key: 'frustrated', label: 'frustrado',  color: '#fb923c' },
-  { key: 'negative',   label: 'negativo',   color: '#f87171' },
-  { key: 'angry',      label: 'raiva',      color: '#dc2626' },
+  { key: 'positive',   label: 'positivo',  color: '#4ade80' },
+  { key: 'excited',    label: 'empolgado', color: '#a3e635' },
+  { key: 'neutral',    label: 'neutro',    color: '#facc15' },
+  { key: 'mixed',      label: 'misto',     color: '#fb923c' },
+  { key: 'frustrated', label: 'frustrado', color: '#f97316' },
+  { key: 'negative',   label: 'negativo',  color: '#f87171' },
+  { key: 'angry',      label: 'raiva',     color: '#ef4444' },
 ];
 
 export default function SentimentChart() {
