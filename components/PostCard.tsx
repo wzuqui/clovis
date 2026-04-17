@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Edit3, Trash2, X } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -125,11 +126,12 @@ export default function PostCard({ post, currentUserId, userReactions, onUpdate 
         </>
       )}
 
-      {lightboxSrc && (
+      {lightboxSrc && createPortal(
         <div className="lightbox-overlay" onClick={() => setLightboxSrc(null)}>
           <button className="lightbox-close" onClick={e => { e.stopPropagation(); setLightboxSrc(null); }}><X size={12} /> fechar</button>
           <img className="lightbox-img" src={lightboxSrc} alt="" onClick={e => e.stopPropagation()} />
-        </div>
+        </div>,
+        document.body
       )}
 
       <div className="post-footer">
