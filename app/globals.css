@@ -374,6 +374,19 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
 
 /* ===== REACTIONS ===== */
 .reaction-bar { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.reaction-wrap { position: relative; }
+.reaction-tooltip {
+  position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  background: var(--bg-3); border: 1px solid var(--border-lite);
+  color: var(--ink-dim); font-size: 11px; white-space: nowrap;
+  padding: 5px 10px; border-radius: 4px; pointer-events: none;
+  animation: slideDown 0.15s ease-out reverse;
+  z-index: 20;
+}
+.reaction-tooltip::after {
+  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 5px solid transparent; border-top-color: var(--border-lite);
+}
 .reaction-btn {
   background: transparent; border: 1px solid var(--border-lite); color: var(--ink-dim);
   padding: 5px 10px; border-radius: 999px; font: inherit; font-size: 12px;
