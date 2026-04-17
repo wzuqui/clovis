@@ -28,11 +28,18 @@ export default function Home() {
   useEffect(() => {
     const supabase = createClient();
 
-    supabase.auth.getUser().then(async ({ data: { user } }) => {
-      setUser(user);
-      if (user) await fetchProfile(user.id);
-      setLoading(false);
-    });
+    const init = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+        if (user) await fetchProfile(user.id);
+      } catch {
+        // auth ou profile falhou — segue sem crash
+      } finally {
+        setLoading(false);
+      }
+    };
+    init();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_, session) => {
       const u = session?.user ?? null;
