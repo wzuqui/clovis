@@ -32,6 +32,9 @@ export default function Home() {
             .eq('id', u.id)
             .single();
           setProfile(data as Profile | null);
+          supabase.from('profiles').update({ last_seen_at: new Date().toISOString() }).eq('id', u.id).then(({ error }) => {
+            if (error) console.error('last_seen_at update failed:', error);
+          });
         } else {
           setProfile(null);
         }
@@ -56,15 +59,6 @@ export default function Home() {
       subscription.unsubscribe();
     };
   }, []);
-
-  useEffect(() => {
-    if (!user) return;
-    const supabase = createClient();
-    const ping = () => supabase.from('profiles').update({ last_seen_at: new Date().toISOString() }).eq('id', user.id);
-    ping();
-    const interval = setInterval(ping, 60_000);
-    return () => clearInterval(interval);
-  }, [user?.id]);
 
   const handleLogout = async () => {
     const supabase = createClient();
