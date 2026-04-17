@@ -18,35 +18,49 @@ export default function Home() {
   useEffect(() => {
     const supabase = createClient();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        try {
-          const u = session?.user ?? null;
-          setUser(u);
-          if (u) {
-            const { data } = await supabase
-              .from('profiles')
-              .select('*')
-              .eq('id', u.id)
-              .single();
-            setProfile(data as Profile | null);
-          } else {
-            setProfile(null);
-          }
-        } catch {
-          // segue sem travar
-        } finally {
-          setLoading(false);
-        }
-      }
-    );
+    // Timeout de segurança — nunca fica travado
+    const timeout = setTimeout(() => setLoading(false), 5000);
 
-    return () => subscription.unsubscribe();
+    const loadUser = async (u: User | null) => {
+      try {
+        setUser(u);
+        if (u) {
+          const { data } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', u.id)
+            .single();
+          setProfile(data as Profile | null);
+        } else {
+          setProfile(null);
+        }
+      } catch {
+        // ignora erros
+      } finally {
+        clearTimeout(timeout);
+        setLoading(false);
+      }
+    };
+
+    // Carga inicial via getUser (faz request direto, sem esperar eventos)
+    supabase.auth.getUser().then(({ data: { user } }) => loadUser(user));
+
+    // Escuta mudanças subsequentes (login/logout)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+      if (!loading) loadUser(session?.user ?? null);
+    });
+
+    return () => {
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
+    setUser(null);
+    setProfile(null);
   };
 
   if (loading) return (
