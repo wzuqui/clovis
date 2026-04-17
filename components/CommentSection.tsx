@@ -1,18 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { MessageCircle, Send, Trash2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import type { Comment } from '@/lib/types';
 
-interface CommentSectionProps {
+export default function CommentSection({ postId, currentUserId, onUpdate }: {
   postId: string;
   currentUserId?: string;
   onUpdate: () => void;
-}
-
-export default function CommentSection({ postId, currentUserId, onUpdate }: CommentSectionProps) {
+}) {
+  const [open, setOpen] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,104 +20,80 @@ export default function CommentSection({ postId, currentUserId, onUpdate }: Comm
   const fetchComments = async () => {
     const supabase = createClient();
     const { data } = await supabase
-      .from('comments')
-      .select('*, profiles(*)')
-      .eq('post_id', postId)
-      .order('created_at', { ascending: true });
+      .from('comments').select('*, profiles(*)')
+      .eq('post_id', postId).order('created_at', { ascending: true });
     setComments(data || []);
   };
 
-  useEffect(() => {
-    fetchComments();
-  }, [postId]);
+  useEffect(() => { if (open) fetchComments(); }, [open, postId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim() || !currentUserId) return;
     setLoading(true);
     const supabase = createClient();
-    await supabase.from('comments').insert({
-      post_id: postId,
-      user_id: currentUserId,
-      content: text.trim(),
-    });
+    await supabase.from('comments').insert({ post_id: postId, user_id: currentUserId, content: text.trim() });
     setText('');
     await fetchComments();
     onUpdate();
     setLoading(false);
   };
 
-  const handleDelete = async (commentId: string) => {
+  const handleDelete = async (id: string) => {
     const supabase = createClient();
-    await supabase.from('comments').delete().eq('id', commentId);
+    await supabase.from('comments').delete().eq('id', id);
     await fetchComments();
     onUpdate();
   };
 
+  const count = comments.length;
+
   return (
-    <div className="mt-4 pt-4 border-t border-gray-700">
-      <div className="space-y-3 mb-4">
-        {comments.length === 0 && (
-          <p className="text-gray-500 text-sm">Nenhum comentário ainda.</p>
-        )}
-        {comments.map((c) => {
-          const initials = (c.profiles?.name || 'A').charAt(0).toUpperCase();
-          return (
-            <div key={c.id} className="flex gap-3">
-              <div className="w-7 h-7 rounded-full bg-purple-700 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                {c.profiles?.avatar_url ? (
-                  <img src={c.profiles.avatar_url} alt="" className="w-full h-full object-cover" />
-                ) : (
-                  <span className="text-white text-xs font-bold">{initials}</span>
+    <div className="comments">
+      <button className="comments-toggle" onClick={() => setOpen(v => !v)}>
+        <MessageCircle size={14} />
+        {count} {count === 1 ? 'comentário' : 'comentários'}
+        <span className="caret">{open ? '▴' : '▾'}</span>
+      </button>
+
+      {open && (
+        <div className="comments-body">
+          {count === 0 && <p className="comments-empty">&gt; nenhum comentário ainda. seja o primeiro.</p>}
+          {comments.map(c => (
+            <div key={c.id} className="comment">
+              <div className="comment-head">
+                <span className="comment-author">@{c.profiles?.name || 'anon'}</span>
+                <span className="comment-time">
+                  {formatDistanceToNow(new Date(c.created_at), { addSuffix: true, locale: ptBR })}
+                </span>
+                {c.user_id === currentUserId && (
+                  <button className="comment-del" onClick={() => handleDelete(c.id)} title="apagar">
+                    <Trash2 size={11} />
+                  </button>
                 )}
               </div>
-              <div className="flex-1 bg-gray-700/60 rounded-lg px-3 py-2">
-                <div className="flex items-baseline justify-between gap-2">
-                  <span className="text-white text-sm font-medium">
-                    {c.profiles?.name || 'Anônimo'}
-                  </span>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className="text-gray-500 text-xs">
-                      {formatDistanceToNow(new Date(c.created_at), { addSuffix: true, locale: ptBR })}
-                    </span>
-                    {currentUserId === c.user_id && (
-                      <button
-                        onClick={() => handleDelete(c.id)}
-                        className="text-gray-500 hover:text-red-400 text-xs transition-colors"
-                      >
-                        ✕
-                      </button>
-                    )}
-                  </div>
-                </div>
-                <p className="text-gray-300 text-sm mt-0.5">{c.content}</p>
-              </div>
+              <p className="comment-text">{c.content}</p>
             </div>
-          );
-        })}
-      </div>
+          ))}
 
-      {currentUserId ? (
-        <form onSubmit={handleSubmit} className="flex gap-2">
-          <input
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Adicionar comentário..."
-            className="flex-1 px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 text-sm focus:outline-none focus:border-purple-500 transition-colors"
-          />
-          <button
-            type="submit"
-            disabled={loading || !text.trim()}
-            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition-colors"
-          >
-            {loading ? '...' : 'Enviar'}
-          </button>
-        </form>
-      ) : (
-        <p className="text-gray-500 text-sm">
-          <a href="/login" className="text-purple-400 hover:underline">Entre</a> para comentar.
-        </p>
+          {currentUserId ? (
+            <form className="comment-input-row" onSubmit={handleSubmit}>
+              <input
+                className="comment-input"
+                placeholder="adicionar comentário…"
+                value={text}
+                onChange={e => setText(e.target.value)}
+              />
+              <button type="submit" className="comment-send" disabled={loading || !text.trim()}>
+                <Send size={12} />
+              </button>
+            </form>
+          ) : (
+            <p style={{ fontSize: 11, color: 'var(--ink-dimmer)', marginTop: 10 }}>
+              <a href="/login" style={{ color: 'var(--accent)' }}>entre</a> para comentar.
+            </p>
+          )}
+        </div>
       )}
     </div>
   );
