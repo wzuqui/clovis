@@ -8,5 +8,5 @@ alter table public.likes
   drop constraint if exists likes_post_id_user_id_key;
 
 alter table public.likes
-  add constraint if not exists likes_post_id_user_id_type_key
+  add constraint likes_post_id_user_id_type_key
   unique (post_id, user_id, type);
