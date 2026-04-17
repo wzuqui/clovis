@@ -10,6 +10,7 @@ import Timeline from '@/components/Timeline';
 import ApprovalGate from '@/components/ApprovalGate';
 import ReactionsChart from '@/components/ReactionsChart';
 import EditProfileModal from '@/components/EditProfileModal';
+import Lightbox from '@/components/Lightbox';
 
 export default function Home() {
   const [user, setUser] = useState<User | null>(null);
@@ -85,6 +86,7 @@ export default function Home() {
   return (
     <div className="app">
       <div className="grid-bg" />
+      <Lightbox />
       <Header user={user} profile={profile} isAdmin={isAdmin} onEditProfile={() => setShowEditProfile(true)} />
       {showEditProfile && user && profile && (
         <EditProfileModal

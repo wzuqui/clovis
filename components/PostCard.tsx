@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
+import { useState } from 'react';
 import { Edit3, Trash2, X } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -25,14 +24,6 @@ export default function PostCard({ post, currentUserId, userReactions, onUpdate 
   const [editing, setEditing] = useState(false);
   const [editBody, setEditBody] = useState(post.content);
   const [saving, setSaving] = useState(false);
-  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
-
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightboxSrc(null); };
-    if (lightboxSrc) window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [lightboxSrc]);
-
   const isMine = currentUserId === post.user_id;
   const name = post.profiles?.name || 'anon';
   const shortId = post.id.slice(-5).toUpperCase();
@@ -106,7 +97,7 @@ export default function PostCard({ post, currentUserId, userReactions, onUpdate 
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
               components={{
-                img({ src, alt }) { return <img className="md-img" src={src} alt={alt || ''} style={{ cursor: 'zoom-in' }} onClick={() => setLightboxSrc(src || null)} />; },
+                img({ src, alt }) { return <img className="md-img" src={src} alt={alt || ''} style={{ cursor: 'zoom-in' }} onClick={() => window.dispatchEvent(new CustomEvent('lightbox:open', { detail: src }))} />; },
                 a({ href, children }) { return <a className="md-link" href={href} target="_blank" rel="noopener noreferrer">{children}</a>; },
                 pre({ children }) { return <pre className="md-pre">{children}</pre>; },
                 code({ children, className }) {
@@ -124,14 +115,6 @@ export default function PostCard({ post, currentUserId, userReactions, onUpdate 
             </ReactMarkdown>
           </div>
         </>
-      )}
-
-      {lightboxSrc && createPortal(
-        <div className="lightbox-overlay" onClick={e => { e.stopPropagation(); setLightboxSrc(null); }}>
-          <button className="lightbox-close" onClick={e => { e.stopPropagation(); setLightboxSrc(null); }}><X size={12} /> fechar</button>
-          <img className="lightbox-img" src={lightboxSrc} alt="" onClick={e => e.stopPropagation()} />
-        </div>,
-        document.body
       )}
 
       <div className="post-footer">
