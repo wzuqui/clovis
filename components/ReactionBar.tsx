@@ -8,6 +8,7 @@ const REACTIONS = [
   { type: 'laugh', emoji: '😂' },
   { type: 'fire',  emoji: '🔥' },
   { type: 'wow',   emoji: '🤯' },
+  { type: 'poop',  emoji: '💩' },
 ];
 
 interface ReactionBarProps {
