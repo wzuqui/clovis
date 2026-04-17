@@ -22,7 +22,6 @@ interface PostCardProps {
 
 export default function PostCard({ post, currentUserId, isLiked, onUpdate }: PostCardProps) {
   const [editing, setEditing] = useState(false);
-  const [editTitle, setEditTitle] = useState(post.title);
   const [editBody, setEditBody] = useState(post.content);
   const [saving, setSaving] = useState(false);
 
@@ -33,10 +32,10 @@ export default function PostCard({ post, currentUserId, isLiked, onUpdate }: Pos
   const timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: true, locale: ptBR });
 
   const saveEdit = async () => {
-    if (!editTitle.trim() || !editBody.trim()) return;
+    if (!editBody.trim()) return;
     setSaving(true);
     const supabase = createClient();
-    await supabase.from('posts').update({ title: editTitle.trim(), content: editBody.trim() }).eq('id', post.id);
+    await supabase.from('posts').update({ content: editBody.trim() }).eq('id', post.id);
     setSaving(false);
     setEditing(false);
     onUpdate();
@@ -79,15 +78,9 @@ export default function PostCard({ post, currentUserId, isLiked, onUpdate }: Pos
 
       {editing ? (
         <div className="edit-mode">
-          <input
-            className="title-input"
-            value={editTitle}
-            onChange={e => setEditTitle(e.target.value)}
-            maxLength={140}
-          />
           <MarkdownEditor value={editBody} onChange={setEditBody} onImageUpload={uploadImage} autoFocus minHeight={200} />
           <div className="edit-actions">
-            <button className="btn-ghost" onClick={() => { setEditTitle(post.title); setEditBody(post.content); setEditing(false); }}>
+            <button className="btn-ghost" onClick={() => { setEditBody(post.content); setEditing(false); }}>
               <X size={12} /> cancelar
             </button>
             <button className="publish-btn small" onClick={saveEdit} disabled={saving}>
@@ -97,7 +90,7 @@ export default function PostCard({ post, currentUserId, isLiked, onUpdate }: Pos
         </div>
       ) : (
         <>
-          <h2 className="post-title">{post.title}</h2>
+          {post.title && <h2 className="post-title">{post.title}</h2>}
           <div className="md-preview" style={{ minHeight: 0, padding: 0 }}>
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}

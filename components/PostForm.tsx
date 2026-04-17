@@ -7,19 +7,17 @@ import { uploadImage } from '@/lib/uploadImage';
 import MarkdownEditor from './MarkdownEditor';
 
 export default function PostForm({ onSuccess, userName }: { onSuccess: () => void; userName: string }) {
-  const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    if (!title.trim() || !body.trim()) return;
+    if (!body.trim()) return;
     setSubmitting(true);
     try {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-      await supabase.from('posts').insert({ title: title.trim(), content: body.trim(), user_id: user.id });
-      setTitle('');
+      await supabase.from('posts').insert({ title: '', content: body.trim(), user_id: user.id });
       setBody('');
       onSuccess();
     } finally {
@@ -34,14 +32,6 @@ export default function PostForm({ onSuccess, userName }: { onSuccess: () => voi
         <span className="composer-meta">assinando como <strong>@{userName}</strong></span>
       </div>
 
-      <input
-        className="title-input"
-        placeholder="título — ex: o Clóvis refatorou 400 linhas e não quebrou nada"
-        value={title}
-        onChange={e => setTitle(e.target.value)}
-        maxLength={140}
-      />
-
       <MarkdownEditor
         value={body}
         onChange={setBody}
@@ -53,7 +43,7 @@ export default function PostForm({ onSuccess, userName }: { onSuccess: () => voi
         <button
           className="publish-btn"
           onClick={handleSubmit}
-          disabled={submitting || !title.trim() || !body.trim()}
+          disabled={submitting || !body.trim()}
         >
           {submitting ? 'publicando…' : 'publicar'} <Send size={13} />
         </button>
