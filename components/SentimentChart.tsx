@@ -61,7 +61,6 @@ export default function SentimentChart() {
                   onMouseEnter={() => setHovered(key)}
                   onMouseLeave={() => setHovered(null)}
                   onTouchStart={e => { e.preventDefault(); setHovered(h => h === key ? null : key); }}
-                  onClick={() => setHovered(h => h === key ? null : key)}
                 >
                   {hovered === key && (
                     <div className="sentiment-tooltip">
