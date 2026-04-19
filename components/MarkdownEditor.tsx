@@ -113,7 +113,10 @@ export default function MarkdownEditor({
             lang="pt-BR"
           />
           {mention.open && (
-            <div className="mention-dropdown">
+            <div
+              className="mention-dropdown"
+              style={{ top: mention.coords.top + mention.coords.height + 2, left: mention.coords.left }}
+            >
               {mention.profiles.map((p, i) => (
                 <button
                   key={p.id}

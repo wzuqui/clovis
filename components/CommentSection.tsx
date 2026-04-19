@@ -130,14 +130,19 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
           {currentUserId ? (
             <form className="comment-input-row" onSubmit={handleSubmit}>
               <textarea
+                ref={taRef}
                 className="comment-input"
                 placeholder="adicionar comentário… (Ctrl+V para colar imagem)"
                 value={text}
-                onChange={e => setText(e.target.value)}
+                onChange={e => { setText(e.target.value); mention.detect(e.target.value); }}
                 rows={1}
                 spellCheck
                 lang="pt-BR"
-                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (text.trim()) handleSubmit(e as unknown as React.FormEvent); } }}
+                onBlur={() => setTimeout(mention.close, 150)}
+                onKeyDown={e => {
+                  if (mention.open) { mention.handleKey(e, (v) => { setText(v); mention.close(); }); if (e.defaultPrevented) return; }
+                  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (text.trim()) handleSubmit(e as unknown as React.FormEvent); }
+                }}
                 onPaste={async e => {
                   const img = Array.from(e.clipboardData.items).find(i => i.type.startsWith('image/'));
                   if (!img) return;
@@ -148,6 +153,23 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
                   setText(t => t + `\n![image](${url})\n`);
                 }}
               />
+              {mention.open && (
+                <div
+                  className="mention-dropdown"
+                  style={{ top: mention.coords.top + mention.coords.height + 2, left: mention.coords.left }}
+                >
+                  {mention.profiles.map((p, i) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      className={`mention-item${i === mention.activeIndex ? ' active' : ''}`}
+                      onMouseDown={(e) => { e.preventDefault(); setText(mention.buildInsert(p.name!)); mention.close(); }}
+                    >
+                      @{p.name}
+                    </button>
+                  ))}
+                </div>
+              )}
               <button type="submit" className="comment-send" disabled={loading || !text.trim()}>
                 <Send size={12} />
               </button>
