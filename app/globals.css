@@ -249,7 +249,7 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
 .publish-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* ===== MARKDOWN EDITOR ===== */
-.md-editor { border: 1px solid var(--border-lite); border-radius: 6px; background: var(--bg); overflow: hidden; }
+.md-editor { border: 1px solid var(--border-lite); border-radius: 6px; background: var(--bg); position: relative; }
 .md-tabs {
   display: flex; align-items: center;
   background: var(--bg-3); border-bottom: 1px solid var(--border);
@@ -572,9 +572,10 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
 .md-textarea-wrap { position: relative; }
 .comment-input-row { position: relative; }
 .mention-dropdown {
-  position: absolute; bottom: calc(100% + 4px); left: 0; z-index: 50;
+  position: absolute; bottom: calc(100% + 4px); left: 0; z-index: 150;
   background: var(--bg-2); border: 1px solid var(--border-lite);
   border-radius: 6px; min-width: 160px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  max-height: 200px; overflow-y: auto;
 }
 .mention-item {
   display: flex; align-items: center; gap: 8px; padding: 8px 12px;
