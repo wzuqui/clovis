@@ -13,6 +13,7 @@ import ReactionBar from './ReactionBar';
 import { SENTIMENTS } from './SentimentChart';
 import CommentSection from './CommentSection';
 import MarkdownEditor from './MarkdownEditor';
+import { highlightMentions } from '@/lib/highlightMentions';
 
 interface PostCardProps {
   post: Post;
@@ -107,7 +108,7 @@ export default function PostCard({ post, currentUserId, userReactions, onUpdate 
                 },
                 blockquote({ children }) { return <blockquote className="md-quote">{children}</blockquote>; },
                 ul({ children }) { return <ul className="md-ul">{children}</ul>; },
-                p({ children }) { return <p className="md-p">{children}</p>; },
+                p({ children }) { return <p className="md-p">{highlightMentions(children)}</p>; },
                 h1({ children }) { return <h1 className="md-h1">{children}</h1>; },
                 h2({ children }) { return <h2 className="md-h2">{children}</h2>; },
                 h3({ children }) { return <h3 className="md-h3">{children}</h3>; },

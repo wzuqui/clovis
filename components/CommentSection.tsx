@@ -13,6 +13,7 @@ import ReactionBar from './ReactionBar';
 import { SENTIMENTS } from './SentimentChart';
 import { useMentionDropdown } from '@/lib/useMentionDropdown';
 import MentionDropdown from './MentionDropdown';
+import { highlightMentions } from '@/lib/highlightMentions';
 
 export default function CommentSection({ postId, currentUserId, onUpdate, initialCount = 0 }: {
   postId: string;
@@ -112,7 +113,7 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
                   components={{
                     img({ src, alt }) { return <img className="md-img" src={src} alt={alt || ''} style={{ cursor: 'zoom-in' }} onClick={() => window.dispatchEvent(new CustomEvent('lightbox:open', { detail: src }))} />; },
                     a({ href, children }) { return <a className="md-link" href={href} target="_blank" rel="noopener noreferrer">{children}</a>; },
-                    p({ children }) { return <p className="md-p" style={{ margin: '4px 0' }}>{children}</p>; },
+                    p({ children }) { return <p className="md-p" style={{ margin: '4px 0' }}>{highlightMentions(children)}</p>; },
                     code({ children, className }) { return className ? <code className={className}>{children}</code> : <code className="md-code">{children}</code>; },
                     pre({ children }) { return <pre className="md-pre">{children}</pre>; },
                   }}

@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm';
 import { Eye, Pencil, ImageIcon } from 'lucide-react';
 import { useMentionDropdown } from '@/lib/useMentionDropdown';
 import MentionDropdown from './MentionDropdown';
+import { highlightMentions } from '@/lib/highlightMentions';
 
 interface MarkdownEditorProps {
   value: string;
@@ -139,7 +140,7 @@ export default function MarkdownEditor({
                 },
                 blockquote({ children }) { return <blockquote className="md-quote">{children}</blockquote>; },
                 ul({ children }) { return <ul className="md-ul">{children}</ul>; },
-                p({ children }) { return <p className="md-p">{children}</p>; },
+                p({ children }) { return <p className="md-p">{highlightMentions(children)}</p>; },
                 h1({ children }) { return <h1 className="md-h1">{children}</h1>; },
                 h2({ children }) { return <h2 className="md-h2">{children}</h2>; },
                 h3({ children }) { return <h3 className="md-h3">{children}</h3>; },
