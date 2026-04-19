@@ -11,10 +11,13 @@ export async function POST(req: NextRequest) {
     const { text, post_id, comment_id, mentioned_by_user_id } = await req.json();
     if (!text || !mentioned_by_user_id) return NextResponse.json({ ok: true });
 
-    const rawNames = text.match(/@(\w+)/g);
-    if (!rawNames || rawNames.length === 0) return NextResponse.json({ ok: true });
+    const MENTION_RE = /@\[([^\]]+)\]|@(\w+)/g;
+    const rawNames: string[] = [];
+    let m: RegExpExecArray | null;
+    while ((m = MENTION_RE.exec(text)) !== null) rawNames.push(m[1] ?? m[2]);
+    if (rawNames.length === 0) return NextResponse.json({ ok: true });
 
-    const names = Array.from(new Set(rawNames.map((n: string) => n.slice(1))));
+    const names = Array.from(new Set(rawNames));
 
     const { data: profiles } = await supabase
       .from('profiles')
