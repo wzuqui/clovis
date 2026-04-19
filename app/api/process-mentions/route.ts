@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     const rawNames = text.match(/@(\w+)/g);
     if (!rawNames || rawNames.length === 0) return NextResponse.json({ ok: true });
 
-    const names = [...new Set(rawNames.map((n: string) => n.slice(1)))];
+    const names = Array.from(new Set(rawNames.map((n: string) => n.slice(1))));
 
     const { data: profiles } = await supabase
       .from('profiles')
