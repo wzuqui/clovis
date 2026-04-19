@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Eye, Pencil, ImageIcon } from 'lucide-react';
 import { useMentionDropdown } from '@/lib/useMentionDropdown';
+import MentionDropdown from './MentionDropdown';
 
 interface MarkdownEditorProps {
   value: string;
@@ -112,22 +113,14 @@ export default function MarkdownEditor({
             spellCheck
             lang="pt-BR"
           />
-          {mention.open && (
-            <div
-              className="mention-dropdown"
-              style={{ top: mention.coords.top + mention.coords.height + 2, left: mention.coords.left }}
-            >
-              {mention.profiles.map((p, i) => (
-                <button
-                  key={p.id}
-                  className={`mention-item${i === mention.activeIndex ? ' active' : ''}`}
-                  onMouseDown={(e) => { e.preventDefault(); onChange(mention.buildInsert(p.name!)); mention.close(); }}
-                >
-                  @{p.name}
-                </button>
-              ))}
-            </div>
-          )}
+          <MentionDropdown
+            open={mention.open}
+            taRef={taRef as React.RefObject<HTMLTextAreaElement>}
+            coords={mention.coords}
+            profiles={mention.profiles}
+            activeIndex={mention.activeIndex}
+            onSelect={(name) => { onChange(mention.buildInsert(name)); mention.close(); }}
+          />
           {dragOver && <div className="drop-overlay">▾ solte a imagem aqui ▾</div>}
         </div>
       ) : (

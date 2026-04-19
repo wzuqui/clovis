@@ -12,6 +12,7 @@ import type { Comment } from '@/lib/types';
 import ReactionBar from './ReactionBar';
 import { SENTIMENTS } from './SentimentChart';
 import { useMentionDropdown } from '@/lib/useMentionDropdown';
+import MentionDropdown from './MentionDropdown';
 
 export default function CommentSection({ postId, currentUserId, onUpdate, initialCount = 0 }: {
   postId: string;
@@ -153,23 +154,14 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
                   setText(t => t + `\n![image](${url})\n`);
                 }}
               />
-              {mention.open && (
-                <div
-                  className="mention-dropdown"
-                  style={{ top: mention.coords.top + mention.coords.height + 2, left: mention.coords.left }}
-                >
-                  {mention.profiles.map((p, i) => (
-                    <button
-                      key={p.id}
-                      type="button"
-                      className={`mention-item${i === mention.activeIndex ? ' active' : ''}`}
-                      onMouseDown={(e) => { e.preventDefault(); setText(mention.buildInsert(p.name!)); mention.close(); }}
-                    >
-                      @{p.name}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <MentionDropdown
+                open={mention.open}
+                taRef={taRef}
+                coords={mention.coords}
+                profiles={mention.profiles}
+                activeIndex={mention.activeIndex}
+                onSelect={(name) => { setText(mention.buildInsert(name)); mention.close(); }}
+              />
               <button type="submit" className="comment-send" disabled={loading || !text.trim()}>
                 <Send size={12} />
               </button>
