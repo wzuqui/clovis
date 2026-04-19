@@ -105,6 +105,8 @@ export default function MarkdownEditor({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onPaste={onPaste}
+            spellCheck
+            lang="pt-BR"
           />
           {dragOver && <div className="drop-overlay">▾ solte a imagem aqui ▾</div>}
         </div>
