@@ -64,8 +64,9 @@ export function useMentionDropdown(value: string, taRef: React.RefObject<HTMLTex
       const { data } = await supabase
         .from('profiles')
         .select('id, name')
-        .ilike('name', `${query}%`)
-        .limit(6);
+        .ilike('name', `%${query}%`)
+        .order('name', { ascending: true })
+        .limit(10);
       setProfiles(data ?? []);
     }, 150);
   }, [query]);
