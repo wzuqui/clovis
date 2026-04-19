@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { MessageCircle, Send, Trash2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase';
+import { uploadImage } from '@/lib/uploadImage';
 import { formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import ReactMarkdown from 'react-markdown';
@@ -124,11 +125,24 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
 
           {currentUserId ? (
             <form className="comment-input-row" onSubmit={handleSubmit}>
-              <input
+              <textarea
                 className="comment-input"
-                placeholder="adicionar comentário…"
+                placeholder="adicionar comentário… (Ctrl+V para colar imagem)"
                 value={text}
                 onChange={e => setText(e.target.value)}
+                rows={1}
+                spellCheck
+                lang="pt-BR"
+                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); if (text.trim()) handleSubmit(e as unknown as React.FormEvent); } }}
+                onPaste={async e => {
+                  const img = Array.from(e.clipboardData.items).find(i => i.type.startsWith('image/'));
+                  if (!img) return;
+                  e.preventDefault();
+                  const file = img.getAsFile();
+                  if (!file) return;
+                  const url = await uploadImage(file);
+                  setText(t => t + `\n![image](${url})\n`);
+                }}
               />
               <button type="submit" className="comment-send" disabled={loading || !text.trim()}>
                 <Send size={12} />

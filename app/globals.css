@@ -479,6 +479,7 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
 .comment-input {
   flex: 1; background: var(--bg-3); border: 1px solid var(--border-lite);
   padding: 8px 12px; border-radius: 4px; color: var(--ink); font: inherit; font-size: 12px; outline: none;
+  resize: none; field-sizing: content; min-height: 36px; max-height: 200px; overflow-y: auto;
 }
 .comment-input:focus { border-color: var(--accent); }
 .comment-input::placeholder { color: var(--ink-dimmer); }
