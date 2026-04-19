@@ -77,7 +77,7 @@ export function useMentionDropdown(value: string, taRef: React.RefObject<HTMLTex
     const match = before.match(/@(\w*)$/);
     if (!match) return value;
     const start = match.index!;
-    const tag = name.includes(' ') ? `@[${name}]` : `@${name}`;
+    const tag = '@' + name.replace(/ /g, '_');
     return value.slice(0, start) + `${tag} ` + value.slice(cursor);
   };
 
