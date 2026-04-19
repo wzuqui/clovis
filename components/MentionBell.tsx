@@ -12,7 +12,14 @@ interface Mention {
   read_at: string | null;
   post_id: string | null;
   comment_id: string | null;
-  mentioned_by: { name: string | null } | null;
+  mentioned_by: { name: string | null }[] | { name: string | null } | null;
+}
+
+function getName(m: Mention): string {
+  const by = m.mentioned_by;
+  if (!by) return 'alguém';
+  if (Array.isArray(by)) return by[0]?.name ?? 'alguém';
+  return by.name ?? 'alguém';
 }
 
 export default function MentionBell({ userId }: { userId: string }) {
@@ -29,7 +36,7 @@ export default function MentionBell({ userId }: { userId: string }) {
       .eq('mentioned_user_id', userId)
       .order('created_at', { ascending: false })
       .limit(10);
-    const list = (data ?? []) as Mention[];
+    const list = (data ?? []) as unknown as Mention[];
     setMentions(list);
     setUnread(list.filter(m => !m.read_at).length);
   };
@@ -76,7 +83,7 @@ export default function MentionBell({ userId }: { userId: string }) {
             <div className="bell-item" style={{ color: 'var(--ink-dimmer)' }}>nenhuma menção ainda.</div>
           ) : mentions.map(m => (
             <div key={m.id} className="bell-item">
-              <span className="bell-who">@{m.mentioned_by?.name ?? 'alguém'}</span>
+              <span className="bell-who">@{getName(m)}</span>
               {' te marcou '}
               {m.post_id ? 'num post' : 'num comentário'}
               <span style={{ display: 'block', fontSize: 10, color: 'var(--ink-dimmer)', marginTop: 2 }}>
