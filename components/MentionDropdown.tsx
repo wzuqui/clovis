@@ -11,16 +11,17 @@ interface Props {
   profiles: MentionProfile[];
   activeIndex: number;
   onSelect: (name: string) => void;
+  anchor?: 'caret' | 'below';
 }
 
-export default function MentionDropdown({ open, taRef, coords, profiles, activeIndex, onSelect }: Props) {
+export default function MentionDropdown({ open, taRef, coords, profiles, activeIndex, onSelect, anchor = 'caret' }: Props) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
   if (!open || !mounted || !taRef.current) return null;
   const rect = taRef.current.getBoundingClientRect();
-  const top = rect.top + coords.top + coords.height + 2;
-  const left = rect.left + coords.left;
+  const top = anchor === 'below' ? rect.bottom + 4 : rect.top + coords.top + coords.height + 2;
+  const left = anchor === 'below' ? rect.left : rect.left + coords.left;
 
   return createPortal(
     <div className="mention-dropdown" style={{ position: 'fixed', top, left }}>

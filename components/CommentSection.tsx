@@ -161,6 +161,7 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
                 profiles={mention.profiles}
                 activeIndex={mention.activeIndex}
                 onSelect={(name) => { setText(mention.buildInsert(name)); mention.close(); }}
+                anchor="below"
               />
               <button type="submit" className="comment-send" disabled={loading || !text.trim()}>
                 <Send size={12} />
