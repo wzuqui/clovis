@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { MentionProfile } from '@/lib/useMentionDropdown';
 
@@ -16,7 +16,9 @@ interface Props {
 
 export default function MentionDropdown({ open, taRef, coords, profiles, activeIndex, onSelect, anchor = 'caret' }: Props) {
   const [mounted, setMounted] = useState(false);
+  const activeRef = useRef<HTMLButtonElement>(null);
   useEffect(() => { setMounted(true); }, []);
+  useEffect(() => { activeRef.current?.scrollIntoView({ block: 'nearest' }); }, [activeIndex]);
 
   if (!open || !mounted || !taRef.current) return null;
   const rect = taRef.current.getBoundingClientRect();
@@ -28,6 +30,7 @@ export default function MentionDropdown({ open, taRef, coords, profiles, activeI
       {profiles.map((p, i) => (
         <button
           key={p.id}
+          ref={i === activeIndex ? activeRef : null}
           type="button"
           className={`mention-item${i === activeIndex ? ' active' : ''}`}
           onMouseDown={(e) => { e.preventDefault(); onSelect(p.name!); }}
