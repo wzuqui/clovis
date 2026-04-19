@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Terminal, LogOut, ShieldCheck, Settings } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import type { Profile } from '@/lib/types';
+import MentionBell from './MentionBell';
 
 interface HeaderProps {
   user: User | null;
@@ -36,6 +37,7 @@ export default function Header({ user, profile, isAdmin, onEditProfile }: Header
 
       {user ? (
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <MentionBell userId={user.id} />
           {isAdmin && (
             <a
               href="/admin"

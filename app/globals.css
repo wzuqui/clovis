@@ -567,3 +567,37 @@ body { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 14px; 
   .login-body { padding: 28px 20px 24px; }
   .ascii-logo { font-size: 7px; }
 }
+
+/* ===== MENTION DROPDOWN ===== */
+.md-textarea-wrap { position: relative; }
+.comment-input-row { position: relative; }
+.mention-dropdown {
+  position: absolute; bottom: calc(100% + 4px); left: 0; z-index: 50;
+  background: var(--bg-2); border: 1px solid var(--border-lite);
+  border-radius: 6px; min-width: 160px; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.mention-item {
+  display: flex; align-items: center; gap: 8px; padding: 8px 12px;
+  cursor: pointer; font-size: 12px; width: 100%; background: none; border: none;
+  color: var(--ink); text-align: left; font-family: inherit;
+}
+.mention-item:hover, .mention-item.active { background: var(--accent-glow); color: var(--accent); }
+
+/* ===== BELL ===== */
+.bell-wrap { position: relative; }
+.bell-badge {
+  position: absolute; top: -4px; right: -4px; background: var(--accent);
+  color: #1a0f08; border-radius: 999px; font-size: 9px; font-weight: 700;
+  padding: 1px 4px; min-width: 14px; text-align: center; pointer-events: none;
+}
+.bell-dropdown {
+  position: absolute; right: 0; top: calc(100% + 8px); width: 280px;
+  background: var(--bg-2); border: 1px solid var(--border-lite);
+  border-radius: 8px; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.bell-item {
+  padding: 10px 14px; border-bottom: 1px solid var(--border-lite);
+  font-size: 12px; color: var(--ink-dim);
+}
+.bell-item:last-child { border-bottom: none; }
+.bell-item .bell-who { color: var(--accent); font-weight: 600; }

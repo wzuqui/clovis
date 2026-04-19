@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MessageCircle, Send, Trash2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase';
 import { uploadImage } from '@/lib/uploadImage';
@@ -11,6 +11,7 @@ import remarkGfm from 'remark-gfm';
 import type { Comment } from '@/lib/types';
 import ReactionBar from './ReactionBar';
 import { SENTIMENTS } from './SentimentChart';
+import { useMentionDropdown } from '@/lib/useMentionDropdown';
 
 export default function CommentSection({ postId, currentUserId, onUpdate, initialCount = 0 }: {
   postId: string;
@@ -23,6 +24,8 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
   const [userRxMap, setUserRxMap] = useState<Map<string, Set<string>>>(new Map());
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
+  const taRef = useRef<HTMLTextAreaElement>(null);
+  const mention = useMentionDropdown(text, taRef);
 
   const fetchComments = async () => {
     const supabase = createClient();
@@ -57,6 +60,7 @@ export default function CommentSection({ postId, currentUserId, onUpdate, initia
     const { data: inserted } = await supabase.from('comments').insert({ post_id: postId, user_id: currentUserId, content: text.trim() }).select('id').single();
     if (inserted?.id) {
       fetch('/api/analyze-sentiment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: text.trim(), id: inserted.id, table: 'comments' }) }).catch(() => {});
+      fetch('/api/process-mentions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: text.trim(), comment_id: inserted.id, mentioned_by_user_id: currentUserId }) }).catch(() => {});
     }
     setText('');
     await fetchComments();

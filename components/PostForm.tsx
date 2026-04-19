@@ -20,6 +20,7 @@ export default function PostForm({ onSuccess, userName }: { onSuccess: () => voi
       const { data: inserted } = await supabase.from('posts').insert({ content: body.trim(), user_id: user.id }).select('id').single();
       if (inserted?.id) {
         fetch('/api/analyze-sentiment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: body.trim(), id: inserted.id, table: 'posts' }) }).catch(() => {});
+        fetch('/api/process-mentions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: body.trim(), post_id: inserted.id, mentioned_by_user_id: user.id }) }).catch(() => {});
       }
       setBody('');
       onSuccess();

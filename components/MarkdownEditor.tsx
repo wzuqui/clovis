@@ -4,6 +4,7 @@ import { useState, useRef, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Eye, Pencil, ImageIcon } from 'lucide-react';
+import { useMentionDropdown } from '@/lib/useMentionDropdown';
 
 interface MarkdownEditorProps {
   value: string;
@@ -26,6 +27,7 @@ export default function MarkdownEditor({
   const [dragOver, setDragOver] = useState(false);
   const taRef = useRef<HTMLTextAreaElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const mention = useMentionDropdown(value, taRef as React.RefObject<HTMLTextAreaElement>);
 
   const insertAtCursor = useCallback((text: string) => {
     const ta = taRef.current;
@@ -103,11 +105,26 @@ export default function MarkdownEditor({
             style={{ minHeight }}
             placeholder={placeholder || 'conta aí o que rolou com o Clóvis Code...\n\ndica: cole uma imagem (Ctrl+V) ou arraste aqui\n\n**markdown** suportado: _itálico_, `código`, # títulos, - listas'}
             value={value}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e) => { onChange(e.target.value); mention.detect(e.target.value); }}
+            onKeyDown={(e) => mention.handleKey(e, (v) => { onChange(v); mention.close(); })}
+            onBlur={() => setTimeout(mention.close, 150)}
             onPaste={onPaste}
             spellCheck
             lang="pt-BR"
           />
+          {mention.open && (
+            <div className="mention-dropdown">
+              {mention.profiles.map((p, i) => (
+                <button
+                  key={p.id}
+                  className={`mention-item${i === mention.activeIndex ? ' active' : ''}`}
+                  onMouseDown={(e) => { e.preventDefault(); onChange(mention.buildInsert(p.name!)); mention.close(); }}
+                >
+                  @{p.name}
+                </button>
+              ))}
+            </div>
+          )}
           {dragOver && <div className="drop-overlay">▾ solte a imagem aqui ▾</div>}
         </div>
       ) : (
